@@ -1,0 +1,35 @@
+# Run outputs
+outputs/
+logs/
+checkpoint/
+validation_log/
+loss_weight/
+wandb/
+.cache/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+.env
+
+# Model weights are not tracked; see the Models section of the README
+models/
+
+# Local wheels (e.g. a hand-picked FlashAttention build)
+*.whl
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

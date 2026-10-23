@@ -1,0 +1,63 @@
+Flash-OPD
+Copyright 2026 The Flash-OPD Authors
+
+This product includes software developed at Bytedance Ltd. and/or its affiliates.
+
+--------------------------------------------------------------------------------
+verl
+--------------------------------------------------------------------------------
+
+The `verl/` directory is a vendored copy of verl (version 0.7.0.dev, see
+`verl/verl/version/version`), from:
+
+    https://github.com/volcengine/verl
+
+Copyright 2023-2024 Bytedance Ltd. and/or its affiliates
+Licensed under the Apache License, Version 2.0.
+
+It is shipped in full rather than as a patch so that `pip install -e ./verl`
+works against the cloned tree. Modifications made for this work are listed in
+`docs/verl_changes.md`; the upstream license and notice are retained at
+`verl/LICENSE` and `verl/Notice.txt`.
+
+--------------------------------------------------------------------------------
+Prune-OPD
+--------------------------------------------------------------------------------
+
+This repository is built on the Prune-OPD release, from:
+
+    https://github.com/yangzhch6/Prune-OPD
+
+Prune-OPD: Efficient and Reliable On-Policy Distillation for Long-Horizon
+Reasoning, Yang et al., 2026 (arXiv:2605.07804). The token-level top-k overlap
+compatibility criterion and the surrounding `prune_opd` module originate there;
+Flash-OPD reuses the criterion and compares against Prune-OPD as a baseline.
+
+--------------------------------------------------------------------------------
+OPD (THUNLP)
+--------------------------------------------------------------------------------
+
+The on-policy distillation objective in this repository -- the
+`token_reward_direct` advantage estimator, the student top-k candidate set, and
+the use of the teacher as a scoring model -- derives from:
+
+    https://github.com/thunlp/OPD
+
+--------------------------------------------------------------------------------
+Datasets
+--------------------------------------------------------------------------------
+
+`datasets/` redistributes third-party evaluation and training data for
+reproducibility. Each remains under the license of its original release:
+
+    dapo-math-17k                 DAPO (BytedTsinghua-SIA)
+    AMC23, AIME24, AIME25         competition problem sets
+    HMMT24, HMMT25                competition problem sets
+    MATH-500                      MATH (Hendrycks et al.) test subset
+    Minerva                       Minerva Math (Lewkowycz et al.)
+    Olympiad-Bench                OlympiadBench (He et al.)
+    GPQA                          GPQA (Rein et al.)
+
+The `ood250/` subdirectories are fixed 250-prompt subsets of the corresponding
+test sets, shipped so the transfer evaluation uses the same prompts the paper
+reports.
