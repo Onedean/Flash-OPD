@@ -132,7 +132,6 @@ bash experiments_scripts/flash-opd-g2-r1-1.5b-r1-7b.sh \
 
 > This release contains **OPD** and **Flash-OPD**; the paper's other baselines are not part of it.
 
-> The OPD baseline is the **absence** of configuration: it calls the same `run_opd` with no `actor_rollout_ref.rollout.prune_opd` overrides, so the subtree is never created and the trainer takes the stock full-horizon path. There is no flag that turns Flash-OPD off — run a baseline under `DRY_RUN=1` and no `prune_opd` key appears.
 
 ### Shared settings
 
@@ -160,21 +159,6 @@ Console-only by default. For W&B, pass the key through the environment — nothi
 WANDB_API_KEY=<your-key> WANDB_MODE=online TRACKING_BACKENDS='[console,wandb]' \
 bash experiments_scripts/flash-opd-g2-r1-1.5b-r1-7b.sh
 ```
-
-Flash-OPD runs log a `prune_opd/*` group describing what the controller did:
-
-| Metric | Reading |
-| --- | --- |
-| `prune_opd/rounds` | verification rounds this step; 1 means the loop never iterated |
-| `prune_opd/len_{mean,min,max}` | retained length across the batch |
-| `prune_opd/decode_overshoot` | tokens decoded but not retained |
-| `prune_opd/verify_amplification` | positions sent to the teacher per position kept |
-| `prune_opd/stop_allowance` | trajectories retired at their verified boundary — the intended path |
-| `prune_opd/stop_context` | trajectories that hit `L_max` instead |
-| `prune_opd/stop_exhausted` | trajectories that finished generating before the allowance |
-| `timing_s/{gen_ict,verify_ict}` | the two halves of the loop's wall clock |
-
-> The three `stop_*` counts partition the batch, so they are the quickest health check: `rounds > 1` with `stop_allowance > 0` means trajectories are retiring at verified boundaries rather than at a shared horizon.
 
 ## 🎓 Evaluation
 
