@@ -134,19 +134,6 @@ bash experiments_scripts/flash-opd-g2-r1-1.5b-r1-7b.sh \
 
 > The OPD baseline is the **absence** of configuration: it calls the same `run_opd` with no `actor_rollout_ref.rollout.prune_opd` overrides, so the subtree is never created and the trainer takes the stock full-horizon path. There is no flag that turns Flash-OPD off — run a baseline under `DRY_RUN=1` and no `prune_opd` key appears.
 
-### Controller settings
-
-G1 is the only pair where the controller is retuned; G2–G4 use the defaults in `flash-opd.sh`. All four share allowance *B* = 200, threshold η = 0.70, step discount ρ = 1.00.
-
-| | Max rollout | *k₀* | *W* | *k*<sub>min</sub> | *L*<sub>max</sub> | Other |
-| --- | --- | --- | --- | --- | --- | --- |
-| G1 | 12288 | 1024 | 1024 | 512 | 4400 | reuse of verification outputs on |
-| G2 | 12288 | 128 | 128 | 16 | 12288 | |
-| G3 | 8192 | 128 | 128 | 16 | 8192 | non-thinking template |
-| G4 | 12288 | 128 | 128 | 16 | 12288 | non-thinking template |
-
-> `L_max` defaults to the rollout budget, which makes it inert. Set below the boundary — as on G1 — it becomes a real retention cap and is the only path that stops a trajectory before its verified boundary.
-
 ### Shared settings
 
 | | |
@@ -164,10 +151,6 @@ G1 is the only pair where the controller is retuned; G2–G4 use the defaults in
 | Verification micro-batch | 4096 tokens |
 | Rollout engine memory fraction | 0.6, engine held resident across rounds |
 
-Two settings are easy to get wrong:
-
-- **`GPU_MEM_UTIL=0.6` goes with `ICT_HOLD_AWAKE=True`.** Holding the rollout engine resident across verification rounds is what makes the method affordable, but the engine keeps its memory reservation while the verification forwards run, so they need headroom. 0.6 is the reported setting; 0.8 runs out of memory in `compute_log_prob`.
-- **`APPLY_CHAT_TEMPLATE_ENABLE_THINKING=False` is mandatory for a Qwen3-Base student** (G3, G4). Left unset, Qwen3 defaults to thinking on, the base student emits a very long chain, hits the evaluation cap and never writes `\boxed{}` — the score then measures parse failure, not reasoning. The wrappers set it.
 
 ### Logging
 
